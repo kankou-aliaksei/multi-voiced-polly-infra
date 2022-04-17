@@ -1,0 +1,24 @@
+{
+  "name": "multi-voiced-polly-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack && (cd ./dist && zip -r ./package.zip .)"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "audiosprite": "^0.7.2",
+    "aws-sdk": "^2.1105.0",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.71.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

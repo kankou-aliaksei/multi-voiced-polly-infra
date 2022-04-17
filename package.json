@@ -1,0 +1,19 @@
+{
+  "name": "multi-voiced-polly-infra",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd lambda && npm i && npm run build",
+    "deploy": "cd iac && npm i && cdk bootstrap -f && cdk deploy --require-approval never",
+    "destroy": "cd iac && npm i && cdk destroy -f"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "aws-cdk": "^2.20.0",
+    "tslint": "^6.1.3"
+  }
+}
