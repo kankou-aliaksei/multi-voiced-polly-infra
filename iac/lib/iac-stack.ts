@@ -5,6 +5,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
 import { Duration } from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
+import { Effect } from '@aws-cdk/aws-iam/lib/policy-statement';
 
 const BUCKET_NAME_PREFIX = 'multi-voiced-polly';
 
@@ -42,7 +43,7 @@ export class IacStack extends cdk.Stack {
     const multiVoicedPollyLambda = new lambda.DockerImageFunction(this, `${this.appName}LambdaFunction`, {
       code: lambda.DockerImageCode.fromImageAsset(dockerfile),
       functionName: 'multiVoicedPolly',
-      memorySize: 512,
+      memorySize: 256,
       vpc: vpc,
       vpcSubnets: vpc.selectSubnets({
         subnets: vpc.privateSubnets
@@ -51,15 +52,10 @@ export class IacStack extends cdk.Stack {
       timeout: Duration.seconds(900),
     });
 
-    const multiVoicedTtsLambdaPolicy = new iam.PolicyStatement({
-      actions: ['*'],
-      resources: ['*'],
-    });
-
     multiVoicedPollyLambda.role?.attachInlinePolicy(
-      new iam.Policy(this, `${this.appName}LambdaPolicy`, {
-        statements: [multiVoicedTtsLambdaPolicy],
-      }),
+        new iam.Policy(this, `${this.appName}LambdaPolicy`, {
+          statements: this.getMultiVoicedPollyLambdaPolicyStatements(),
+        }),
     );
 
     multiVoicedPollyLambda.addEnvironment('INPUT_BUCKET', inputBucket);
@@ -94,5 +90,99 @@ export class IacStack extends cdk.Stack {
         uid: '0'
       }
     });
+  }
+
+  private getMultiVoicedPollyLambdaPolicyStatements = (): Array<iam.PolicyStatement> => {
+    const statements: Array<iam.PolicyStatement> = [];
+
+    const listInputObjectsPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:ListObjectsV2'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-input-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(listInputObjectsPolicy);
+
+    const listOutputObjectsPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:ListObjectsV2'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-output-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(listOutputObjectsPolicy);
+
+    const deleteInputObjectsPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:DeleteObjects'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-input-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(deleteInputObjectsPolicy);
+
+    const deleteOutputObjectsPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:DeleteObjects'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-output-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(deleteOutputObjectsPolicy);
+
+    const getInputObjectPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:GetObject'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-input-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(getInputObjectPolicy);
+
+    const getOutputObjectPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:GetObject'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-output-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(getOutputObjectPolicy);
+
+    const listOutputBucketPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:ListBucket'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-output-${this.account}-${this.region}`],
+    });
+
+    statements.push(listOutputBucketPolicy);
+
+    const listInputBucketPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:ListBucket'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-input-${this.account}-${this.region}`],
+    });
+
+    statements.push(listInputBucketPolicy);
+
+    const putObjectPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['s3:PutObject'],
+      resources: [`arn:aws:s3:::${BUCKET_NAME_PREFIX}-output-${this.account}-${this.region}/*`],
+    });
+
+    statements.push(putObjectPolicy);
+
+    const pollyStartSpeechSynthesisTaskPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['polly:StartSpeechSynthesisTask'],
+      resources: [`*`],
+    });
+
+    statements.push(pollyStartSpeechSynthesisTaskPolicy);
+
+    const pollyGetSpeechSynthesisTaskPolicy = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ['polly:GetSpeechSynthesisTask'],
+      resources: [`*`],
+    });
+
+    statements.push(pollyGetSpeechSynthesisTaskPolicy);
+
+    return statements;
   }
 }

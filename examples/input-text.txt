@@ -1,19 +1,5 @@
-@Matthew Good morning, Washington Grade School, this is Chris. How may I help you?
-@Joanna Good morning, this is Alice Smith, I'm calling for my daughter, Judy. She's not feeling well today.
-@Matthew I'm sorry to hear that. I hope it's not too bad.
-@Kimberly No, no she has a little fever and a cough. Nothing too serious.
-@Matthew Well, I hope she feels well soon.
-@Joanna Thank you. Do you think I could get her homework for today?
-@Matthew Is there any specific class?
-@Joanna I'm especially concerned about math and science.
-@Kimberly OK, is it all right for me to give your email address to the teachers? They can then send the homework along later today.
-@Justin That would be great. Do you have my e-mail on file?
-@Kevin Just a moment... We have chrisp ad gmail.com. Is that correct?
-@Justin Yes, that is correct.
-@Kevin OK, I'll make sure Mr. Brown and Ms. White get your message and email.
-@Ivy Thank you very much.
-@Joey I hope Judy feels well soon.
-@Justin She should be fine by tomorrow. Thanks for your help.
-@Joey My pleasure, have a nice day.
-@Ivy Thank you. Goodbye.
-@Joey Goodbye.
+@Matthew I really want to go to the beach this weekend.
+@Joanna That sounds like fun. What's the weather going to be like?
+@Matthew I heard that it's going to be warm this weekend.
+@Kimberly Is it going to be perfect beach weather?
+@Joanna  I believe so.

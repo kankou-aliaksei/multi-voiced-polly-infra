@@ -9,7 +9,7 @@
     "deploy": "cd iac && npm i && cdk bootstrap -f && cdk deploy --require-approval never",
     "destroy": "cd iac && npm i && cdk destroy -f"
   },
-  "keywords": [],
+  "keywords": ["aws", "amazon", "multi", "voiced", "polly", "multivoiced", "multivoicedpolly", "infra", "infrastructure"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
